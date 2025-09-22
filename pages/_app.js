@@ -1,13 +1,32 @@
-import { Provider } from "react-redux";
-import { store } from "../src/redux/store";
+import { Provider, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { store } from "../src/redux/store"; // ✅ named import
+import { checkAuth } from "../src/redux/authSlice";
+import Layout from "../src/components/Layout";
 import "../styles/globals.css";
 
-function MyApp({ Component, pageProps }) {
+// ✅ Safe AuthProvider
+function AuthProvider({ children }) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // runs only on client
+    if (typeof window !== "undefined") {
+      dispatch(checkAuth());
+    }
+  }, [dispatch]);
+
+  return children;
+}
+
+export default function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </AuthProvider>
     </Provider>
   );
 }
-
-export default MyApp;

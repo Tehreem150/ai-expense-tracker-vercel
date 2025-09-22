@@ -2,6 +2,7 @@ import dbConnect from "../../../src/utils/db";
 import User from "../../../src/models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { serialize } from "cookie"; //
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -32,7 +33,26 @@ export default async function handler(req, res) {
       { expiresIn: "7d" }
     );
 
-    return res.status(200).json({ message: "Login successful", token, user });
+    // ✅ use serialize instead of cookie.serialize
+    res.setHeader(
+      "Set-Cookie",
+      serialize("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+      })
+    );
+
+    return res.status(200).json({
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

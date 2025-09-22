@@ -10,13 +10,23 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.0",
+    "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
+    "cookie": "^1.0.2",
+    "formidable": "^3.5.4",
+    "framer-motion": "^12.23.16",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.544.0",
     "mongoose": "^8.18.1",
     "next": "15.5.3",
+    "openai": "^5.20.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-redux": "^9.2.0"
+    "react-hook-form": "^7.62.0",
+    "react-redux": "^9.2.0",
+    "recharts": "^3.2.1",
+    "swr": "^2.3.6",
+    "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
