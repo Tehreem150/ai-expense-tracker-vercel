@@ -4,6 +4,7 @@ import { registerUser } from "../src/redux/authSlice";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Mail, Lock, User as UserIcon } from "lucide-react";
+import Link from "next/link"; // ✅ import Link
 
 export default function Register() {
   const {
@@ -97,9 +98,9 @@ export default function Register() {
         {/* Switch link */}
         <p className="mt-6 text-center text-sm text-gray-200">
           Already have an account?{" "}
-          <a href="/login" className="text-pink-300 font-semibold hover:underline">
+          <Link href="/login" className="text-pink-300 font-semibold hover:underline">
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

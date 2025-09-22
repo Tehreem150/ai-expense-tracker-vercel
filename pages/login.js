@@ -4,6 +4,7 @@ import { loginUser } from "../src/redux/authSlice";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Mail, Lock } from "lucide-react";
+import Link from "next/link"; // ✅ import Link
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -74,12 +75,12 @@ export default function Login() {
         {/* Switch link */}
         <p className="mt-6 text-center text-sm text-gray-200">
           Don’t have an account?{" "}
-          <a
+          <Link
             href="/register"
             className="text-pink-300 font-semibold hover:underline"
           >
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </div>
