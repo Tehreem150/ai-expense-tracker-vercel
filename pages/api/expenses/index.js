@@ -1,12 +1,30 @@
+// /pages/api/expenses/index.js
 import dbConnect from "../../../src/utils/db";
 import Expense from "../../../src/models/Expense";
+import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   await dbConnect();
 
+  // ✅ extract token from cookie
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ error: "No token, authorization denied" });
+  }
+
+  let userId;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    userId = decoded.id; // 👈 this assumes your token payload has { id: user._id }
+  } catch (err) {
+    return res.status(401).json({ error: "Token is not valid" });
+  }
+
   if (req.method === "GET") {
     try {
-      const expenses = await Expense.find().sort({ createdAt: -1 });
+      const expenses = await Expense.find({ user: userId }).sort({
+        createdAt: -1,
+      });
       return res.status(200).json(expenses);
     } catch (error) {
       console.error("❌ Error fetching expenses:", error);
@@ -16,7 +34,7 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     try {
-      const { title, amount, category, date, description, user } = req.body;
+      const { title, amount, category, date, description } = req.body;
 
       if (!title || !amount || !date) {
         return res.status(400).json({ error: "Missing required fields" });
@@ -28,7 +46,7 @@ export default async function handler(req, res) {
         category: category || "Other",
         date,
         description: description || "",
-        user: user || "67a5f9f8e6a1a2c9d4f12345", // temp user
+        user: userId, // ✅ now taken from JWT
       });
 
       await expense.save();

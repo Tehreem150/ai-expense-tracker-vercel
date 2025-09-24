@@ -15,7 +15,7 @@ export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
-  // Ensure hydration-safe rendering
+  // Ensure client-only rendering
   useEffect(() => {
     setHydrated(true);
   }, []);
@@ -34,10 +34,13 @@ export default function Sidebar() {
     { href: "/index", label: "Home", icon: <Home size={20} /> },
   ];
 
+  // ⛔ Don’t render until hydrated
+  if (!hydrated) return null;
+
   return (
     <aside
       className={`${
-        hydrated ? (isCollapsed ? "w-20" : "w-64") : "w-64" // default SSR size
+        isCollapsed ? "w-20" : "w-64"
       } bg-gradient-to-r from-indigo-500 to-pink-500 text-white min-h-screen p-4 transition-all duration-300`}
     >
       {/* Toggle Button */}
